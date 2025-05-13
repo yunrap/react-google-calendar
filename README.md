@@ -1,46 +1,86 @@
-# Getting Started with Create React App
+구글 캘린더의 [주별 화면]을 클론하여 구현하였습니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+## 📝 설명
 
-In the project directory, you can run:
+- 구글 캘린더의 [주별 보기] 화면을 클론합니다.
+- 이벤트(일정) 추가/삭제 및 달력 반영 기능을 구현합니다.
+- 서버와의 통신 없이, 프론트엔드에서만 동작합니다.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## ✅ 구현 범위
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- 좌측 date-picker와 상단 <, > 버튼을 통한 날짜 이동
+- date-picker와 주별 달력이 함께 이동 (redux로 상태 동기화)
+- 달력 이동 시 기존 추가된 이벤트가 유지됨 (redux로 상태 관리)
+- 주별 보기 화면만 구현 (월별/일별은 선택 사항)
+- date-picker에서 날짜 선택 시, 주별 달력이 해당 주로 이동
+- 일정(이벤트) 추가/삭제 (모달 창 사용, 제목/시간 입력)
+- 날짜 이동 후, 일정이 있는 주간에 돌아오면 기존 일정이 표시됨
+- (가산점) 반복 일정, 이벤트 중첩 구현
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ 기술 스택
 
-### `npm run build`
+- React (TypeScript)
+- Redux Toolkit
+- SCSS (Sass)
+- react-day-picker
+- Prettier, ESLint
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📁 폴더 구조
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+src/
+  components/      # 재사용 컴포넌트 (DatePicker 등)
+  features/        # Redux slice 등 상태 관리
+  store/           # Redux store 설정
+  styles/          # SCSS 스타일
+  App.tsx
+  index.tsx
+```
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 🚀 실행 방법
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. 패키지 설치
+   ```
+   npm install
+   ```
+2. 개발 서버 실행
+   - 아래 두 명령어 중 하나를 사용하세요.
+   ```
+   npm run dev
+   ```
+   또는
+   ```
+   npm start
+   ```
+   > `npm run dev`와 `npm start` 모두 개발 서버를 실행합니다. (둘 중 아무거나 사용 가능)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## ✨ 주요 기능
 
-## Learn More
+- 주간 캘린더(Week View) UI
+- 좌측 DatePicker로 날짜 이동
+- 상단 <, > 버튼으로 주간 이동
+- 일정(이벤트) 추가/삭제 (모달)
+- Redux로 상태 관리(이벤트, 날짜 등)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📋 요구사항 체크리스트
+
+- [ ] 주간 보기 달력 구현
+- [ ] DatePicker와 주간 달력 연동
+- [ ] Redux로 상태 관리
+- [ ] 이벤트 추가/삭제 및 유지
+- [x] SCSS, Prettier 적용
+- [ ] (선택) 월간 보기, 반복 일정 등
