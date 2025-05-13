@@ -4,8 +4,10 @@
   "private": true,
   "dependencies": {
     "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
     "postcss": "^8.5.3",
     "react": "^19.1.0",
+    "react-big-calendar": "^1.18.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",
     "sass": "^1.69.0",
@@ -21,6 +23,7 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.4",
+    "@types/react-big-calendar": "^1.16.1",
     "@types/react-dom": "^19.1.4"
   },
   "scripts": {

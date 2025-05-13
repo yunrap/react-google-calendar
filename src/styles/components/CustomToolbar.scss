@@ -1,0 +1,19 @@
+.custom-toolbar {
+  @apply flex items-center justify-between mb-4;
+
+  &__navigation-group {
+    @apply flex items-center;
+
+    .btn + .btn {
+      @apply ml-1;
+    }
+  }
+
+  &__label {
+    @apply text-lg font-semibold text-gray-700;
+  }
+
+  &__view-group {
+    @apply flex items-center;
+  }
+}
