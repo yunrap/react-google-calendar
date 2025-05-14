@@ -12,7 +12,6 @@ import 'moment/locale/ko';
 import 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useMemo } from 'react';
-import CustomToolbar from './CustomToolbar';
 import { RootState } from '../store/store';
 
 moment.tz.setDefault('Asia/Seoul');
@@ -22,7 +21,7 @@ const localizer = momentLocalizer(moment);
 interface MyCalendarProps {
   events?: Event[];
   date?: Date;
-  onNavigate?: (newDate: Date, view: CalendarView, action: NavigateAction) => void;
+  onNavigate?: (date: Date, view: CalendarView, action: NavigateAction) => void;
 }
 
 const MyCalendar: React.FC<MyCalendarProps> = ({ date, onNavigate }) => {
@@ -34,11 +33,18 @@ const MyCalendar: React.FC<MyCalendarProps> = ({ date, onNavigate }) => {
     []
   );
 
+  const handleNavigate = (newDate: Date, view: CalendarView, action: NavigateAction) => {
+    if (onNavigate) {
+      onNavigate(newDate, view, action);
+    }
+  };
+
   return (
-    <div className=" h-full mx-4 overflow-auto">
+    <div className="h-full mx-4 overflow-auto">
       <Calendar
         date={date}
-        onNavigate={onNavigate}
+        toolbar={false}
+        onNavigate={handleNavigate}
         localizer={localizer}
         events={events}
         startAccessor="start"
@@ -46,9 +52,6 @@ const MyCalendar: React.FC<MyCalendarProps> = ({ date, onNavigate }) => {
         culture="ko"
         defaultView={Views.WEEK}
         views={calendarViews}
-        components={{
-          toolbar: CustomToolbar,
-        }}
       />
     </div>
   );

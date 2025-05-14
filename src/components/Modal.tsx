@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useId } from 'react';
+import React, { useState, useEffect, useRef, useId, KeyboardEvent } from 'react';
 import '../styles/components/Modal.scss';
 import Button from './Button';
 import Input from './Input';
@@ -142,6 +142,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
           <Input
             value={eventState.title}
             onChange={(e) => handleStateChange('title', e.target.value)}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSave();
+              }
+            }}
             autoFocus
             placeholder="제목 추가"
             name="eventTitle"

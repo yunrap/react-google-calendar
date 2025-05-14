@@ -1,20 +1,43 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import MyCalendar from './components/MyCalendar';
 import Sidebar from './components/Sidebar';
+import Header from './components/Header';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './store/store';
 import { setDate } from './store/dateSlice';
+import { Navigate, View as CalendarView, NavigateAction } from 'react-big-calendar';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const dispatch = useDispatch<AppDispatch>();
-  const currentCalendarDateString = useSelector((state: RootState) => state.date.currentDate);
-  const currentCalendarDate = new Date(currentCalendarDateString);
+  const currentDateString = useSelector((state: RootState) => state.date.currentDate);
+  const currentCalendarDate = useMemo(() => new Date(currentDateString), [currentDateString]);
+
+  const handleNavigate = useCallback(
+    (action: 'TODAY' | 'PREV' | 'NEXT' | 'DATE') => {
+      let newDate = new Date(currentCalendarDate);
+
+      switch (action) {
+        case Navigate.TODAY:
+          newDate = new Date();
+          break;
+        case Navigate.PREVIOUS:
+          newDate.setDate(currentCalendarDate.getDate() - 7);
+          break;
+        case Navigate.NEXT:
+          newDate.setDate(currentCalendarDate.getDate() + 7);
+          break;
+      }
+
+      dispatch(setDate(newDate));
+    },
+    [dispatch, currentCalendarDate]
+  );
 
   const handleCalendarNavigate = useCallback(
-    (newDate: Date) => {
+    (newDate: Date, view: CalendarView, action: NavigateAction) => {
       dispatch(setDate(newDate));
     },
     [dispatch]
@@ -27,20 +50,12 @@ function App() {
   return (
     <div className="App flex h-screen bg-gray-50">
       <div className="flex-1 flex flex-col">
-        <header className="App-header p-4 bg-white shadow-md flex items-center h-20">
-          <button
-            className={`p-2 z-20 cursor-pointer bg-transparent border-0 ${
-              isSidebarOpen ? 'open' : ''
-            }`}
-            onClick={toggleSidebar}
-            aria-label={isSidebarOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isSidebarOpen}
-          >
-            <span className="block w-6 h-0.5 bg-gray-700 my-1" />
-            <span className="block w-6 h-0.5 bg-gray-700 my-1" />
-            <span className="block w-6 h-0.5 bg-gray-700 my-1" />
-          </button>
-        </header>
+        <Header
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          onNavigate={handleNavigate}
+          date={currentCalendarDate}
+        />
         <main className="flex flex-1">
           {isSidebarOpen && (
             <Sidebar
