@@ -1,22 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface DateState {
-  currentDate: string;
+  currentDate: Date;
+  calendarDate: Date;
 }
 
 const initialState: DateState = {
-  currentDate: new Date().toISOString(),
+  currentDate: new Date(),
+  calendarDate: new Date(),
 };
 
 const dateSlice = createSlice({
   name: 'date',
   initialState,
   reducers: {
-    setDate: (state, action: PayloadAction<string>) => {
+    setDate: (state, action: PayloadAction<Date>) => {
+      // 오른쪽 캘린더
       state.currentDate = action.payload;
+    },
+    setCalendarDate: (state, action: PayloadAction<Date>) => {
+      // 왼쪽 캘린더
+      state.calendarDate = action.payload;
     },
   },
 });
 
-export const { setDate } = dateSlice.actions;
+export const { setDate, setCalendarDate } = dateSlice.actions;
 export default dateSlice.reducer;

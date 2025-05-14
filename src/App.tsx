@@ -1,6 +1,4 @@
 import { useState, useCallback } from 'react';
-import moment from 'moment';
-import { Event } from 'react-big-calendar';
 import MyCalendar from './components/MyCalendar';
 import Sidebar from './components/Sidebar';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +7,6 @@ import { setDate } from './store/dateSlice';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [calendarEvents, setCalendarEvents] = useState<Event[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -18,42 +15,13 @@ function App() {
 
   const handleCalendarNavigate = useCallback(
     (newDate: Date) => {
-      dispatch(setDate(newDate.toISOString()));
+      dispatch(setDate(newDate));
     },
     [dispatch]
   );
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleSaveEventModal = (formData: {
-    title: string;
-    startTime: string;
-    endTime: string;
-  }) => {
-    const { title, startTime, endTime } = formData;
-
-    const eventDate = moment(currentCalendarDate).month(4).date(13);
-
-    const newEvent: Event = {
-      title: title,
-      start: moment(eventDate)
-        .hour(parseInt(startTime.split(':')[0], 10))
-        .minute(parseInt(startTime.split(':')[1], 10))
-        .second(0)
-        .millisecond(0)
-        .toDate(),
-      end: moment(eventDate)
-        .hour(parseInt(endTime.split(':')[0], 10))
-        .minute(parseInt(endTime.split(':')[1], 10))
-        .second(0)
-        .millisecond(0)
-        .toDate(),
-    };
-
-    setCalendarEvents((prevEvents) => [...prevEvents, newEvent]);
-    setIsModalOpen(false);
   };
 
   return (
@@ -79,15 +47,10 @@ function App() {
               isModalOpen={isModalOpen}
               openModal={() => setIsModalOpen(true)}
               closeModal={() => setIsModalOpen(false)}
-              onSaveModal={handleSaveEventModal}
             />
           )}
-          <div className="flex-1 p-4">
-            <MyCalendar
-              events={calendarEvents}
-              date={currentCalendarDate}
-              onNavigate={handleCalendarNavigate}
-            />
+          <div className="flex-1 p-4 rounded-lg bg-white shadow-md h-[calc(100vh-6rem)] ">
+            <MyCalendar date={currentCalendarDate} onNavigate={handleCalendarNavigate} />
           </div>
         </main>
       </div>

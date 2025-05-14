@@ -2,6 +2,9 @@ import React from 'react';
 import { Navigate, ToolbarProps as BigCalendarToolbarProps } from 'react-big-calendar';
 import Button from './Button';
 import '../styles/components/CustomToolbar.scss';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store/store';
+import { setCalendarDate } from '../store/dateSlice';
 
 export interface CustomToolbarProps {
   label: string;
@@ -9,9 +12,11 @@ export interface CustomToolbarProps {
 }
 
 const CustomToolbar: React.FC<BigCalendarToolbarProps> = (props) => {
-  const { label, onNavigate } = props;
+  const { label, onNavigate, date } = props;
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleNavigate = (action: 'TODAY' | 'PREV' | 'NEXT') => {
+    dispatch(setCalendarDate(date));
     onNavigate(action);
   };
 

@@ -6,12 +6,14 @@ import {
   NavigateAction,
   View as CalendarView,
 } from 'react-big-calendar';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/ko';
 import 'moment-timezone';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useMemo } from 'react';
 import CustomToolbar from './CustomToolbar';
+import { RootState } from '../store/store';
 
 moment.tz.setDefault('Asia/Seoul');
 moment.locale('ko');
@@ -23,7 +25,8 @@ interface MyCalendarProps {
   onNavigate?: (newDate: Date, view: CalendarView, action: NavigateAction) => void;
 }
 
-const MyCalendar: React.FC<MyCalendarProps> = ({ events = [], date, onNavigate }) => {
+const MyCalendar: React.FC<MyCalendarProps> = ({ date, onNavigate }) => {
+  const events = useSelector((state: RootState) => state.events.events);
   const { views: calendarViews } = useMemo(
     () => ({
       views: [Views.WEEK],
@@ -32,7 +35,7 @@ const MyCalendar: React.FC<MyCalendarProps> = ({ events = [], date, onNavigate }
   );
 
   return (
-    <div className="" style={{ height: '500px' }}>
+    <div className=" h-full mx-4 overflow-auto">
       <Calendar
         date={date}
         onNavigate={onNavigate}

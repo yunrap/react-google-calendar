@@ -4,7 +4,7 @@ import { ko } from 'date-fns/locale';
 import '../styles/components/DatePicker.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
-import { setDate } from '../store/dateSlice';
+import { setCalendarDate } from '../store/dateSlice';
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -13,31 +13,27 @@ interface DatePickerProps {
 
 export function DatePicker({ value, onChange }: DatePickerProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const currentDate = useSelector((state: RootState) => new Date(state.date.currentDate));
-  const handleMonthChange = (month: Date) => {
-    dispatch(setDate(month.toISOString()));
-  };
+  const currentDate = useSelector((state: RootState) => new Date(state.date.calendarDate));
 
   return (
-    <div className="rdp-wrapper rounde">
+    <div className="rdp-wrapper">
       <DayPicker
         mode="single"
         selected={value}
         onSelect={onChange}
         month={currentDate}
-        onMonthChange={handleMonthChange}
+        onMonthChange={(month) => {
+          dispatch(setCalendarDate(month));
+        }}
         locale={ko}
         weekStartsOn={0}
         showOutsideDays
         fixedWeeks
         classNames={{
-          today: `bg-blue-700 text-white rounded-full flex items-center justify-center`,
-          selected: `bg-blue-300 text-white rounded-full flex items-center justify-center`,
-          head_row: 'flex justify-between items-center',
-          caption: 'text-lg font-bold text-center',
-          caption_label: 'text-lg font-bold text-center text-gray-700',
+          today: `bg-blue-700 text-white rounded-full justify-center`,
+          selected: `bg-blue-300 text-white rounded-full justify-center`,
           button_next: 'rounded-full hover:bg-gray-200',
-          button_previous: 'rounded-full rounded-md hover:bg-gray-200',
+          button_previous: 'rounded-full hover:bg-gray-200',
           chevron: 'fill-black',
         }}
         components={{
