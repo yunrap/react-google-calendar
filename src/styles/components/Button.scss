@@ -1,7 +1,6 @@
 .btn {
   @apply rounded-xl font-semibold cursor-pointer border border-black text-center select-none inline-flex items-center justify-center;
   @apply transition-all duration-150 ease-in-out;
-  @apply text-black;
 
   &:hover {
     @apply hover:bg-gray-300;

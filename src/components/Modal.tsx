@@ -199,8 +199,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
         </div>
 
         <div className="modal-footer">
-          <Button onClick={onClose}>취소</Button>
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white" onClick={handleSave}>
+          <Button onClick={onClose} className="border-none">
+            취소
+          </Button>
+          <Button
+            className="bg-blue-500 hover:bg-blue-600 text-white border-none"
+            onClick={handleSave}
+          >
             저장
           </Button>
         </div>
