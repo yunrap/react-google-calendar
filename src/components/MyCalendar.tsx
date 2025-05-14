@@ -51,7 +51,7 @@ const MyCalendar: React.FC<MyCalendarProps> = ({ date, onNavigate }) => {
   };
 
   return (
-    <div className="h-full mx-4 overflow-auto">
+    <div className="h-[calc(100vh-6rem)] sm:h-full mx-4 overflow-auto">
       <Calendar
         date={date}
         toolbar={false}

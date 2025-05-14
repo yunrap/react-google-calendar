@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './store/store';
 import { setDate } from './store/dateSlice';
 import { Navigate, View as CalendarView, NavigateAction } from 'react-big-calendar';
+import Modal from './components/Modal';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,17 +59,20 @@ function App() {
         />
         <main className="flex flex-1">
           {isSidebarOpen && (
-            <Sidebar
-              isModalOpen={isModalOpen}
-              openModal={() => setIsModalOpen(true)}
-              closeModal={() => setIsModalOpen(false)}
-            />
+            <Sidebar isModalOpen={isModalOpen} openModal={() => setIsModalOpen(true)} />
           )}
-          <div className="flex-1 p-4 rounded-lg bg-white shadow-md h-[calc(100vh-6rem)] ">
+          <div className="flex-1 sm:p-4 rounded-lg bg-white shadow-md h-full sm:h-[calc(100vh-6rem)] ">
             <MyCalendar date={currentCalendarDate} onNavigate={handleCalendarNavigate} />
           </div>
         </main>
+        <button
+          className="fixed bottom-10 right-10 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg xl:hidden"
+          onClick={() => setIsModalOpen(true)}
+        >
+          +
+        </button>
       </div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} modalTitle="등록 하기" />
     </div>
   );
 }
