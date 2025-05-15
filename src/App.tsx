@@ -18,17 +18,17 @@ function App() {
 
   const handleNavigateDatePicker = useCallback(
     (action: NavigateAction) => {
-      let newDate = currentDate;
+      let newDate = new Date(currentDate);
 
       switch (action) {
         case Navigate.TODAY:
           newDate = new Date();
           break;
         case Navigate.PREVIOUS:
-          newDate.setDate(newDate.getDate() - 7);
+          newDate = new Date(newDate.setDate(newDate.getDate() - 7));
           break;
         case Navigate.NEXT:
-          newDate.setDate(newDate.getDate() + 7);
+          newDate = new Date(newDate.setDate(newDate.getDate() + 7));
           break;
       }
 
@@ -52,7 +52,7 @@ function App() {
         />
         <main className="flex flex-1">
           {isSidebarOpen && <Sidebar openModal={() => setIsModalOpen(true)} />}
-          <div className="flex-1 sm:p-4 rounded-lg bg-white shadow-md h-full sm:h-[calc(100vh-6rem)] ">
+          <div className="flex-1 p-4 rounded-lg bg-white shadow-md h-full sm:h-[calc(100vh-6rem)] ">
             <MyCalendar date={currentDate} />
           </div>
         </main>

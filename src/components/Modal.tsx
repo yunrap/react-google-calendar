@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useId, KeyboardEvent } from 'react';
+import React, { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { DayPicker } from 'react-day-picker';
 import moment from 'moment';
 import { ko } from 'date-fns/locale';
@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { addEvent } from '../store/eventSlice';
 import { useModalClose } from '../hooks/useModalClose';
-import { useBodyScroll } from '../hooks/useBodyScroll';
 import Button from './Button';
 import Input from './Input';
 import TimePicker from './TimePicker';
@@ -21,7 +20,6 @@ interface ModalProps {
 
 interface EventState {
   title: string;
-  inputValue: string;
   startTime: string;
   endTime: string;
   selectedDate: Date | undefined;
@@ -29,10 +27,8 @@ interface EventState {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
-  const dialogId = useId();
-  const headerId = useId();
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const dayPickerRef = useRef<HTMLDivElement>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const calendarDate = useSelector((state: RootState) => state.date.calendarDate);
@@ -41,7 +37,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [eventState, setEventState] = useState<EventState>({
     title: '',
-    inputValue: '',
     startTime: '',
     endTime: '',
     selectedDate: currentDate,
@@ -49,7 +44,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
   });
 
   useModalClose(isOpen, onClose, wrapperRef);
-  useBodyScroll(isDialogOpen, dialogRef);
 
   const handleStateChange = (type: keyof EventState, value: any) => {
     if (type === 'startTime') {
@@ -68,14 +62,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
   };
 
   const handleDayPickerSelect = (date: Date | undefined) => {
+    setIsDialogOpen(false);
     if (!date) return;
     dispatch(setCalendarDate(date.toISOString()));
     setEventState((prev) => ({
       ...prev,
       selectedDate: date,
-      inputValue: timeUtils.formatKoreanDate(date),
     }));
-    dialogRef.current?.close();
   };
 
   const handleSave = () => {
@@ -110,11 +103,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
     setEventState((prev) => ({
       ...prev,
       selectedDate: currentDate,
-      inputValue: timeUtils.formatKoreanDate(currentDate),
     }));
   }, [currentDate]);
 
   useEffect(() => {
+    setIsDialogOpen(false);
     if (isOpen) {
       const defaultStartTime = timeUtils.getDefaultStartTime();
       setEventState((prev) => ({
@@ -122,12 +115,33 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
         title: '',
         startTime: defaultStartTime,
         endTime: timeUtils.getMinEndTime(defaultStartTime),
-        inputValue: timeUtils.formatKoreanDate(currentDate),
       }));
     }
-  }, [isOpen, currentDate]);
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dayPickerRef.current && !dayPickerRef.current.contains(event.target as Node)) {
+        setIsDialogOpen(false);
+      }
+    };
+
+    if (isDialogOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDialogOpen]);
 
   if (!isOpen) return null;
+
+  const renderMonthCaption = () => (
+    <div className="text-lg font-bold text-gray-700" key={currentDate.toString()}>
+      {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+    </div>
+  );
 
   return (
     <div className="modal-overlay" ref={wrapperRef} onClick={onClose}>
@@ -152,35 +166,45 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
             placeholder="제목 추가"
             name="eventTitle"
           />
-          <div className="relative flex items-center">
+          <div className="relative flex sm:flex-row flex-col">
             <input
-              className="p-2 border rounded w-full"
+              className="relative p-2 border rounded w-full"
               type="text"
-              value={eventState.inputValue}
+              value={timeUtils.formatKoreanDate(eventState.selectedDate!)}
               placeholder="MM/dd/yyyy"
-              onChange={(e) => handleStateChange('inputValue', e.target.value)}
               onMouseUp={() => setIsDialogOpen(true)}
               onFocus={() => setIsDialogOpen(true)}
             />
-            <dialog
-              className="absolute p-2 bg-white rounded-lg shadow-lg z-50 max-w-52"
-              ref={dialogRef}
-              id={dialogId}
-              aria-modal
-              aria-labelledby={headerId}
-              onClose={() => setIsDialogOpen(false)}
-            >
-              <DayPicker
-                locale={ko}
-                mode="single"
-                selected={eventState.selectedDate}
-                onSelect={handleDayPickerSelect}
-                month={eventState.month}
-                onMonthChange={(month) => handleStateChange('month', month)}
-                className="!w-auto"
-              />
-            </dialog>
-            <div className="flex pl-2 items-center space-x-2">
+            <div className="relative sm:static">
+              {isDialogOpen && (
+                <div
+                  ref={dayPickerRef}
+                  className="absolute left-0 top-full mt-2 p-2 bg-white rounded-lg shadow-lg z-50 max-w-52"
+                >
+                  <DayPicker
+                    mode="single"
+                    selected={eventState.selectedDate}
+                    onSelect={handleDayPickerSelect}
+                    month={eventState.month}
+                    onMonthChange={(month) => handleStateChange('month', month)}
+                    locale={ko}
+                    showOutsideDays
+                    classNames={{
+                      today: `bg-blue-700 text-white rounded-full justify-center`,
+                      selected: `bg-blue-300 text-white rounded-full`,
+                      button_next: 'rounded-full hover:bg-gray-200',
+                      button_previous: 'rounded-full hover:bg-gray-200',
+                      chevron: 'fill-black',
+                    }}
+                    components={{
+                      MonthCaption: renderMonthCaption,
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex sm:pl-2 pt-2 sm:pt-0 items-center space-x-2">
               <TimePicker
                 value={eventState.startTime}
                 onChange={(time) => handleStateChange('startTime', time)}
