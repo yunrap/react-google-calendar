@@ -170,6 +170,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
             <input
               className="relative p-2 border rounded w-full"
               type="text"
+              inputMode="none"
               value={timeUtils.formatKoreanDate(eventState.selectedDate!)}
               placeholder="MM/dd/yyyy"
               onMouseUp={() => setIsDialogOpen(true)}

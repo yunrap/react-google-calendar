@@ -52,12 +52,12 @@ function App() {
         />
         <main className="flex flex-1">
           {isSidebarOpen && <Sidebar openModal={() => setIsModalOpen(true)} />}
-          <div className="flex-1 p-4 rounded-lg bg-white shadow-md h-full sm:h-[calc(100vh-6rem)] ">
+          <div className="flex-1 py-4 rounded-lg bg-white shadow-md h-full sm:h-[calc(100vh-6rem)] ">
             <MyCalendar date={currentDate} />
           </div>
         </main>
         <button
-          className="fixed bottom-10 right-10 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg xl:hidden"
+          className="fixed bottom-10 right-10 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg xl:hidden font-bold flex items-center justify-center"
           onClick={() => setIsModalOpen(true)}
         >
           +

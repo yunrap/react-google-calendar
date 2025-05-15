@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ openModal }) => {
         <Button
           onClick={openModal}
           className="px-10 py-2 bg-white border-none shadow-md border border-gray-200 "
-          size="large"
+          size="xlarge"
         >
           만들기
         </Button>
