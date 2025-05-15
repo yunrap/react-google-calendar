@@ -12,7 +12,7 @@ interface DatePickerProps {
 
 export function DatePicker({ value, onChange }: DatePickerProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const calendarDate = useSelector((state: RootState) => new Date(state.date.calendarDate));
+  const calendarDate = useSelector((state: RootState) => state.date.calendarDate);
   const currentDate = useMemo(() => new Date(calendarDate), [calendarDate]);
 
   const handleMonthChange = (month: Date) => {

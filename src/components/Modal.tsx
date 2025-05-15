@@ -22,8 +22,8 @@ interface EventState {
   title: string;
   startTime: string;
   endTime: string;
-  selectedDate: Date | undefined;
-  month: Date | undefined;
+  selectedDate: Date;
+  month: Date;
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
@@ -138,8 +138,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
   if (!isOpen) return null;
 
   const renderMonthCaption = () => (
-    <div className="text-lg font-bold text-gray-700" key={currentDate.toString()}>
-      {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+    <div className="text-lg font-bold text-gray-700" key={eventState.toString()}>
+      {eventState.month.getFullYear()}년 {eventState.month.getMonth() + 1}월
     </div>
   );
 
