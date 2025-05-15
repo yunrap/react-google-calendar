@@ -1,16 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Event as CalendarEvent } from 'react-big-calendar';
-
-interface Event extends CalendarEvent {
-  id: string;
-}
+import { Event } from '../types/calendar';
 
 interface EventState {
   events: Event[];
+  selectedEvent: Event | null;
 }
 
 const initialState: EventState = {
   events: [],
+  selectedEvent: null,
 };
 
 const eventSlice = createSlice({

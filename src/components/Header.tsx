@@ -1,23 +1,16 @@
 import React from 'react';
-import { Navigate } from 'react-big-calendar';
+import { Navigate, NavigateAction } from 'react-big-calendar';
 import Button from './Button';
-import { useDispatch } from 'react-redux';
-import { setCalendarDate, setDate } from '../store/dateSlice';
-import { AppDispatch } from '../store/store';
 
 interface HeaderProps {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
-  onNavigate: (action: 'TODAY' | 'PREV' | 'NEXT' | 'DATE') => void;
+  onNavigate: (action: NavigateAction) => void;
   date: Date;
 }
 
 const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar, onNavigate, date }) => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleNavigate = (action: 'TODAY' | 'PREV' | 'NEXT') => {
-    dispatch(setDate(date));
-    dispatch(setCalendarDate(date));
+  const handleNavigate = (action: NavigateAction) => {
     onNavigate(action);
   };
 
@@ -38,7 +31,12 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar, onNavigat
           <h1 className="text-xl sm:text-xl font-semibold text-gray-800 ml-4">Google Calendar</h1>
         </div>
         <div className="flex items-center gap-4">
-          <Button className="px-3 sm:px-6 rounded-full hidden">오늘</Button>
+          <Button
+            className="px-3 sm:px-6 rounded-full hidden sm:block"
+            onClick={() => handleNavigate(Navigate.TODAY)}
+          >
+            오늘
+          </Button>
           <Button
             onClick={() => handleNavigate(Navigate.PREVIOUS)}
             className="border-none text-2xl font-bold px-2 sm:px-4"
@@ -62,4 +60,4 @@ const Header: React.FC<HeaderProps> = ({ isSidebarOpen, toggleSidebar, onNavigat
   );
 };
 
-export default Header;
+export default React.memo(Header);

@@ -1,13 +1,12 @@
 import React from 'react';
-import { Event } from 'react-big-calendar';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
 import { deleteEvent } from '../store/eventSlice';
 import Button from './Button';
-import '../styles/components/Modal.scss';
+import { Event } from '../types/calendar';
 
 interface EventDetailModalProps {
-  event: Event & { id: string };
+  event: Event;
   onClose: () => void;
 }
 
@@ -47,4 +46,4 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({ event, onClose }) =
   );
 };
 
-export default EventDetailModal;
+export default React.memo(EventDetailModal);

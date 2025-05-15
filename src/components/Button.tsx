@@ -1,6 +1,5 @@
 import React from 'react';
-import clsx from 'clsx'; // Import clsx
-import '../styles/components/Button.scss';
+import clsx from 'clsx';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

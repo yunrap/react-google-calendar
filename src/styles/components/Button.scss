@@ -1,13 +1,24 @@
 .btn {
-  @apply rounded-xl font-semibold cursor-pointer border border-black text-center select-none items-center justify-center;
-  @apply transition-all duration-150 ease-in-out;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid black;
+  text-align: center;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease-in-out;
 
   &:hover {
-    @apply hover:bg-gray-300;
+    background-color: #e5e7eb;
   }
 
   &:disabled,
   &[disabled] {
-    @apply bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed;
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    border-color: #d1d5db;
+    cursor: not-allowed;
   }
 }

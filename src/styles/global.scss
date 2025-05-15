@@ -1,8 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-$primary-color: #4f46e5;
+@import '../styles/components/Button.scss';
+@import '../styles/components/DatePicker.scss';
+@import '../styles/components/Input.scss';
+@import '../styles/components/Modal.scss';
+@import '../styles/components/TimePicker.scss';
 
 body {
   font-family: 'Pretendard', sans-serif;

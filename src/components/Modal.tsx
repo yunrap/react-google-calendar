@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef, useId, KeyboardEvent } from 'react';
-import '../styles/components/Modal.scss';
+import { DayPicker } from 'react-day-picker';
+import moment from 'moment';
+import { ko } from 'date-fns/locale';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store/store';
+import { addEvent } from '../store/eventSlice';
+import { useModalClose } from '../hooks/useModalClose';
+import { useBodyScroll } from '../hooks/useBodyScroll';
 import Button from './Button';
 import Input from './Input';
 import TimePicker from './TimePicker';
 import timeUtils from '../utils/timeUtils';
-import { DayPicker } from 'react-day-picker';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store/store';
-import { addEvent } from '../store/eventSlice';
-import { setDate } from '../store/dateSlice';
-import moment from 'moment';
-import { useModalClose } from '../hooks/useModalClose';
-import { useBodyScroll } from '../hooks/useBodyScroll';
-import { ko } from 'date-fns/locale';
+import { setCalendarDate } from '../store/dateSlice';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  modalTitle?: string;
+}
 
 interface EventState {
   title: string;
@@ -23,23 +28,17 @@ interface EventState {
   month: Date | undefined;
 }
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  modalTitle?: string;
-}
-
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
   const dialogId = useId();
   const headerId = useId();
-  const dispatch = useDispatch<AppDispatch>();
-  const currentDateString = useSelector((state: RootState) => state.date.currentDate);
-  const currentDate = React.useMemo(() => new Date(currentDateString), [currentDateString]);
-
   const dialogRef = useRef<HTMLDialogElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const dispatch = useDispatch<AppDispatch>();
+  const calendarDate = useSelector((state: RootState) => state.date.calendarDate);
+  const currentDate = React.useMemo(() => new Date(calendarDate), [calendarDate]);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [eventState, setEventState] = useState<EventState>({
     title: '',
     inputValue: '',
@@ -51,26 +50,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
 
   useModalClose(isOpen, onClose, wrapperRef);
   useBodyScroll(isDialogOpen, dialogRef);
-  useEffect(() => {
-    setEventState((prev) => ({
-      ...prev,
-      selectedDate: currentDate,
-      inputValue: timeUtils.formatKoreanDate(currentDate),
-    }));
-  }, [currentDate]);
-
-  useEffect(() => {
-    if (isOpen) {
-      const defaultStartTime = timeUtils.getDefaultStartTime();
-      setEventState((prev) => ({
-        ...prev,
-        title: '',
-        startTime: defaultStartTime,
-        endTime: timeUtils.getMinEndTime(defaultStartTime),
-        inputValue: timeUtils.formatKoreanDate(currentDate),
-      }));
-    }
-  }, [isOpen, currentDate]);
 
   const handleStateChange = (type: keyof EventState, value: any) => {
     if (type === 'startTime') {
@@ -90,7 +69,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
 
   const handleDayPickerSelect = (date: Date | undefined) => {
     if (!date) return;
-    dispatch(setDate(date));
+    dispatch(setCalendarDate(date.toISOString()));
     setEventState((prev) => ({
       ...prev,
       selectedDate: date,
@@ -126,6 +105,27 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
     dispatch(addEvent(newEvent));
     onClose();
   };
+
+  useEffect(() => {
+    setEventState((prev) => ({
+      ...prev,
+      selectedDate: currentDate,
+      inputValue: timeUtils.formatKoreanDate(currentDate),
+    }));
+  }, [currentDate]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const defaultStartTime = timeUtils.getDefaultStartTime();
+      setEventState((prev) => ({
+        ...prev,
+        title: '',
+        startTime: defaultStartTime,
+        endTime: timeUtils.getMinEndTime(defaultStartTime),
+        inputValue: timeUtils.formatKoreanDate(currentDate),
+      }));
+    }
+  }, [isOpen, currentDate]);
 
   if (!isOpen) return null;
 

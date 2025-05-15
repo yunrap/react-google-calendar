@@ -1,52 +1,45 @@
-import { useState, useCallback, useMemo } from 'react';
-import MyCalendar from './components/MyCalendar';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import { useState, useCallback } from 'react';
+import { Navigate, NavigateAction } from 'react-big-calendar';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from './store/store';
-import { setDate } from './store/dateSlice';
-import { Navigate, View as CalendarView, NavigateAction } from 'react-big-calendar';
+import { AppDispatch } from './store/store';
+import { selectCurrentDate } from './store/selectors';
+import Header from './components/Header';
+import MyCalendar from './components/MyCalendar';
 import Modal from './components/Modal';
+import Sidebar from './components/Sidebar';
+import { setCalendarDate } from './store/dateSlice';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const dispatch = useDispatch<AppDispatch>();
-  const currentDateString = useSelector((state: RootState) => state.date.currentDate);
-  const currentCalendarDate = useMemo(() => new Date(currentDateString), [currentDateString]);
+  const currentDate = useSelector(selectCurrentDate);
 
-  const handleNavigate = useCallback(
-    (action: 'TODAY' | 'PREV' | 'NEXT' | 'DATE') => {
-      let newDate = new Date(currentCalendarDate);
+  const handleNavigateDatePicker = useCallback(
+    (action: NavigateAction) => {
+      let newDate = currentDate;
 
       switch (action) {
         case Navigate.TODAY:
           newDate = new Date();
           break;
         case Navigate.PREVIOUS:
-          newDate.setDate(currentCalendarDate.getDate() - 7);
+          newDate.setDate(newDate.getDate() - 7);
           break;
         case Navigate.NEXT:
-          newDate.setDate(currentCalendarDate.getDate() + 7);
+          newDate.setDate(newDate.getDate() + 7);
           break;
       }
 
-      dispatch(setDate(newDate));
+      dispatch(setCalendarDate(newDate.toISOString()));
     },
-    [dispatch, currentCalendarDate]
+    [currentDate, dispatch]
   );
 
-  const handleCalendarNavigate = useCallback(
-    (newDate: Date, view: CalendarView, action: NavigateAction) => {
-      dispatch(setDate(newDate));
-    },
-    [dispatch]
-  );
-
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setIsSidebarOpen(!isSidebarOpen);
-  };
+  }, [isSidebarOpen]);
 
   return (
     <div className="App flex h-screen bg-gray-50">
@@ -54,15 +47,13 @@ function App() {
         <Header
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
-          onNavigate={handleNavigate}
-          date={currentCalendarDate}
+          onNavigate={handleNavigateDatePicker}
+          date={currentDate}
         />
         <main className="flex flex-1">
-          {isSidebarOpen && (
-            <Sidebar isModalOpen={isModalOpen} openModal={() => setIsModalOpen(true)} />
-          )}
+          {isSidebarOpen && <Sidebar openModal={() => setIsModalOpen(true)} />}
           <div className="flex-1 sm:p-4 rounded-lg bg-white shadow-md h-full sm:h-[calc(100vh-6rem)] ">
-            <MyCalendar date={currentCalendarDate} onNavigate={handleCalendarNavigate} />
+            <MyCalendar date={currentDate} />
           </div>
         </main>
         <button
