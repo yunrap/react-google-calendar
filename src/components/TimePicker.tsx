@@ -71,19 +71,38 @@ const TimePicker: React.FC<TimePickerProps> = ({
       <div
         className="time-picker__display"
         onClick={() => setIsOpen(!isOpen)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setIsOpen((prev) => !prev);
+          }
+        }}
         role="button"
         tabIndex={0}
       >
         {timeUtils.formatDisplayTime(value) || placeholder || '시간 선택'}
       </div>
       {isOpen && (
-        <ul id={dropdownId} className="time-picker__dropdown" ref={dropdownRef} role="listbox">
+        <ul
+          id={dropdownId}
+          className="time-picker__dropdown"
+          ref={dropdownRef}
+          role="listbox"
+          aria-label="시간 선택"
+        >
           {timeSlots.map((slot) => (
             <li
               key={slot}
               ref={value === slot ? selectedItemRef : null}
               className={`time-picker__item ${value === slot ? 'selected' : ''}`}
               onClick={() => handleTimeSelect(slot)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleTimeSelect(slot);
+                }
+              }}
+              role="option"
+              aria-selected={value === slot}
+              tabIndex={0}
             >
               {timeUtils.formatDisplayTime(slot)}
             </li>

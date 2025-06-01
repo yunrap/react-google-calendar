@@ -9,7 +9,7 @@ import Modal from './components/Modal';
 import Sidebar from './components/Sidebar';
 import { setCalendarDate } from './store/dateSlice';
 
-function App() {
+export const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -66,6 +66,4 @@ function App() {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} modalTitle="등록 하기" />
     </div>
   );
-}
-
-export default App;
+};

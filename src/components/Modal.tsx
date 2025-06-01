@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { addEvent } from '../store/eventSlice';
 import { useModalClose } from '../hooks/useModalClose';
-import Button from './Button';
+import { Button } from './Button';
 import Input from './Input';
 import TimePicker from './TimePicker';
 import timeUtils from '../utils/timeUtils';
@@ -45,8 +45,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
 
   useModalClose(isOpen, onClose, wrapperRef);
 
-  const handleStateChange = (type: keyof EventState, value: any) => {
-    if (type === 'startTime') {
+  const handleStateChange = (type: keyof EventState, value: string | Date) => {
+    if (type === 'startTime' && typeof value === 'string') {
       const minEndTime = timeUtils.getMinEndTime(value);
       setEventState((prev) => ({
         ...prev,
@@ -144,15 +144,25 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
   );
 
   return (
-    <div className="modal-overlay" ref={wrapperRef} onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className="modal-overlay" ref={wrapperRef} role="dialog" aria-modal="true">
+      <button
+        className="modal-overlay-button"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+            onClose();
+          }
+        }}
+        style={{ width: '100%', height: '100%', background: 'transparent', border: 'none' }}
+      />
+      <div className="modal-content" role="document">
+        <header className="modal-header">
           {modalTitle && <h2 className="modal-title">{modalTitle}</h2>}
           <Button onClick={onClose} className="modal-close-btn">
             &times;
           </Button>
-        </div>
-        <div className="modal-body space-y-4">
+        </header>
+        <body className="modal-body space-y-4">
           <Input
             value={eventState.title}
             onChange={(e) => handleStateChange('title', e.target.value)}
@@ -162,8 +172,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
                 handleSave();
               }
             }}
-            autoFocus
-            placeholder="제목 추가"
             name="eventTitle"
           />
           <div className="relative flex sm:flex-row flex-col">
@@ -171,7 +179,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
               className="relative p-2 border rounded w-full"
               type="text"
               inputMode="none"
-              value={timeUtils.formatKoreanDate(eventState.selectedDate!)}
+              value={timeUtils.formatKoreanDate(
+                eventState.selectedDate ? eventState.selectedDate : currentDate
+              )}
               placeholder="MM/dd/yyyy"
               onMouseUp={() => setIsDialogOpen(true)}
               onFocus={() => setIsDialogOpen(true)}
@@ -221,9 +231,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
               />
             </div>
           </div>
-        </div>
+        </body>
 
-        <div className="modal-footer">
+        <footer className="modal-footer">
           <Button onClick={onClose} className="border-none">
             취소
           </Button>
@@ -233,7 +243,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, modalTitle }) => {
           >
             저장
           </Button>
-        </div>
+        </footer>
       </div>
     </div>
   );

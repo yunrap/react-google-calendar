@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
 import { deleteEvent } from '../store/eventSlice';
-import Button from './Button';
+import { Button } from './Button';
 import { Event } from '../types/calendar';
 
 interface EventDetailModalProps {
@@ -19,20 +19,30 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({ event, onClose }) =
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
+    <div className="modal-overlay" role="dialog" aria-modal="true">
+      <button
+        className="modal-overlay-button"
+        onClick={onClose}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+            onClose();
+          }
+        }}
+        style={{ width: '100%', height: '100%', background: 'transparent', border: 'none' }}
+      />
+      <div className="modal-content" role="document">
+        <header className="modal-header">
           <h2 className="modal-title">상세 보기</h2>
           <Button onClick={onClose} className="modal-close-btn">
             &times;
           </Button>
-        </div>
+        </header>
 
-        <div className="modal-body space-y-4">
+        <body className="modal-body space-y-4">
           <h2 className="modal-title">{event.title}</h2>
-        </div>
+        </body>
 
-        <div className="modal-footer">
+        <footer className="modal-footer">
           <Button
             className="bg-red-500 hover:bg-red-600 text-white border-none"
             onClick={handleDelete}
@@ -40,7 +50,7 @@ const EventDetailModal: React.FC<EventDetailModalProps> = ({ event, onClose }) =
             삭제
           </Button>
           <Button onClick={onClose}>닫기</Button>
-        </div>
+        </footer>
       </div>
     </div>
   );

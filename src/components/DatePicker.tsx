@@ -10,7 +10,7 @@ interface DatePickerProps {
   onChange?: (date: Date | undefined) => void;
 }
 
-export function DatePicker({ value, onChange }: DatePickerProps) {
+export const DatePicker = ({ value, onChange }: DatePickerProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const calendarDate = useSelector((state: RootState) => state.date.calendarDate);
   const currentDate = useMemo(() => new Date(calendarDate), [calendarDate]);
@@ -50,4 +50,4 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
       />
     </div>
   );
-}
+};

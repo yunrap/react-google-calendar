@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import 'react-day-picker/style.css';
 import './styles/global.scss';
 import './styles/index.css';
-import App from './App';
+import { App } from './App';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 

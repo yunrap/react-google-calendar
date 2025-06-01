@@ -1,6 +1,8 @@
 import React from 'react';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+}
 
 const Input: React.FC<InputProps> = ({ className = '', type = 'text', ...rest }) => {
   const combinedClassName = `custom-input ${className}`.trim();

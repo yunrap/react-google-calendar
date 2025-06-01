@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
-import Button from './Button';
+import { Button } from './Button';
 import { DatePicker } from './DatePicker';
 import { setCalendarDate } from '../store/dateSlice';
 import { selectCurrentDate } from '../store/selectors';

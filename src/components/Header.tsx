@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, NavigateAction } from 'react-big-calendar';
-import Button from './Button';
+import { Button } from './Button';
 
 interface HeaderProps {
   isSidebarOpen: boolean;

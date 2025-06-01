@@ -6,13 +6,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'small' | 'medium' | 'large' | 'xlarge';
 }
 
-export default function Button({
+export const Button: React.FC<ButtonProps> = ({
   children,
   className,
   size = 'medium',
   type = 'button',
   ...rest
-}: ButtonProps) {
+}) => {
   const baseClassName = 'btn';
 
   const sizeClasses = clsx({
@@ -31,4 +31,4 @@ export default function Button({
       {children}
     </button>
   );
-}
+};

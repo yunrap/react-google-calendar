@@ -43,7 +43,7 @@ const getMinEndTime = (startTime: string | null): string => {
  */
 const generateTimeSlots = (): string[] => {
   const slots: string[] = [];
-  let currentTime = moment().startOf('day');
+  const currentTime = moment().startOf('day');
   const endOfDay = moment().endOf('day');
 
   while (currentTime.isSameOrBefore(endOfDay)) {
@@ -61,7 +61,7 @@ const generateTimeSlots = (): string[] => {
  */
 const generateTimeSlotsFromStart = (startTime: string): string[] => {
   const slots: string[] = [];
-  let currentTime = moment(startTime, 'HH:mm').add(30, 'minutes');
+  const currentTime = moment(startTime, 'HH:mm').add(30, 'minutes');
   const endOfDay = moment().endOf('day');
 
   if (!currentTime.isValid()) {
@@ -101,7 +101,7 @@ const formatDisplayTime = (timeValue: string | undefined): string => {
 function formatKoreanDate(date: Date): string {
   if (!date) return '';
   const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', weekday: 'long' };
-  let formatted = date.toLocaleDateString('ko-KR', options);
+  const formatted = date.toLocaleDateString('ko-KR', options);
   return formatted.replace(/ (\S+)$/, '($1)');
 }
 
